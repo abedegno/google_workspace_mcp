@@ -252,6 +252,54 @@ class TestSearchDirectoryPeople:
         kwargs = svc.people.return_value.searchDirectoryPeople.call_args.kwargs
         assert kwargs["pageSize"] == 500
 
+    def test_merge_disabled_omits_param(self):
+        svc = MagicMock()
+        svc.people.return_value.searchDirectoryPeople.return_value.execute.return_value = {
+            "people": []
+        }
+
+        run(
+            search_directory_people(
+                service=svc,
+                user_google_email="me@example.com",
+                query="test",
+                merge_contact_into_profile=False,
+            )
+        )
+
+        kwargs = svc.people.return_value.searchDirectoryPeople.call_args.kwargs
+        assert "mergeSources" not in kwargs
+
+    def test_passes_page_token(self):
+        svc = MagicMock()
+        svc.people.return_value.searchDirectoryPeople.return_value.execute.return_value = {
+            "people": []
+        }
+
+        run(
+            search_directory_people(
+                service=svc,
+                user_google_email="me@example.com",
+                query="test",
+                page_token="tok123",
+            )
+        )
+
+        kwargs = svc.people.return_value.searchDirectoryPeople.call_args.kwargs
+        assert kwargs["pageToken"] == "tok123"
+
+    def test_rejects_zero_page_size(self):
+        svc = MagicMock()
+        with pytest.raises(UserInputError):
+            run(
+                search_directory_people(
+                    service=svc,
+                    user_google_email="me@example.com",
+                    query="test",
+                    page_size=0,
+                )
+            )
+
     def test_empty_result_message(self):
         svc = MagicMock()
         svc.people.return_value.searchDirectoryPeople.return_value.execute.return_value = {}
