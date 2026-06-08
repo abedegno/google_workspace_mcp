@@ -68,9 +68,7 @@ CONTACTS_READONLY_SCOPE = "https://www.googleapis.com/auth/contacts.readonly"
 # Directory scope - read-only access to the organization's domain directory
 # (only available in Google Workspace accounts; required for listDirectoryPeople
 # and searchDirectoryPeople, which return colleagues from the user's domain.)
-DIRECTORY_READONLY_SCOPE = (
-    "https://www.googleapis.com/auth/directory.readonly"
-)
+DIRECTORY_READONLY_SCOPE = "https://www.googleapis.com/auth/directory.readonly"
 
 # Google Custom Search API scope
 CUSTOM_SEARCH_SCOPE = "https://www.googleapis.com/auth/cse"

@@ -13,9 +13,7 @@ import sys
 import pytest
 from unittest.mock import MagicMock
 
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from gcontacts.contacts_tools import (  # noqa: E402  (path setup above)
     DEFAULT_DIRECTORY_SOURCES,
@@ -72,9 +70,9 @@ class TestResolveDirectorySources:
             ]
 
     def test_full_value_passthrough(self):
-        assert _resolve_directory_sources(
-            [DIRECTORY_SOURCE_DOMAIN_PROFILE]
-        ) == [DIRECTORY_SOURCE_DOMAIN_PROFILE]
+        assert _resolve_directory_sources([DIRECTORY_SOURCE_DOMAIN_PROFILE]) == [
+            DIRECTORY_SOURCE_DOMAIN_PROFILE
+        ]
 
     def test_unknown_source_raises(self):
         with pytest.raises(UserInputError):
@@ -89,14 +87,10 @@ class TestListDirectoryPeople:
         }
 
         result = run(
-            list_directory_people(
-                service=svc, user_google_email="me@example.com"
-            )
+            list_directory_people(service=svc, user_google_email="me@example.com")
         )
 
-        kwargs = (
-            svc.people.return_value.listDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.listDirectoryPeople.call_args.kwargs
         assert kwargs["readMask"] == DIRECTORY_DEFAULT_PERSON_FIELDS
         assert kwargs["sources"] == list(DEFAULT_DIRECTORY_SOURCES)
         assert kwargs["pageSize"] == 100
@@ -119,9 +113,7 @@ class TestListDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.listDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.listDirectoryPeople.call_args.kwargs
         assert "mergeSources" not in kwargs
 
     def test_clamps_page_size_to_1000(self):
@@ -136,9 +128,7 @@ class TestListDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.listDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.listDirectoryPeople.call_args.kwargs
         assert kwargs["pageSize"] == 1000
 
     def test_rejects_zero_page_size(self):
@@ -166,9 +156,7 @@ class TestListDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.listDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.listDirectoryPeople.call_args.kwargs
         assert kwargs["pageToken"] == "tok123"
 
     def test_uses_resolved_sources(self):
@@ -185,9 +173,7 @@ class TestListDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.listDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.listDirectoryPeople.call_args.kwargs
         assert kwargs["sources"] == [DIRECTORY_SOURCE_DOMAIN_PROFILE]
 
     def test_includes_next_page_token_in_response(self):
@@ -198,9 +184,7 @@ class TestListDirectoryPeople:
         }
 
         result = run(
-            list_directory_people(
-                service=svc, user_google_email="me@example.com"
-            )
+            list_directory_people(service=svc, user_google_email="me@example.com")
         )
 
         assert "Next page token: next-tok" in result
@@ -210,9 +194,7 @@ class TestListDirectoryPeople:
         svc.people.return_value.listDirectoryPeople.return_value.execute.return_value = {}
 
         result = run(
-            list_directory_people(
-                service=svc, user_google_email="me@example.com"
-            )
+            list_directory_people(service=svc, user_google_email="me@example.com")
         )
 
         assert "No directory people found" in result
@@ -233,9 +215,7 @@ class TestSearchDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.searchDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.searchDirectoryPeople.call_args.kwargs
         assert kwargs["query"] == "bob"
         assert kwargs["readMask"] == DIRECTORY_DEFAULT_PERSON_FIELDS
         assert kwargs["sources"] == list(DEFAULT_DIRECTORY_SOURCES)
@@ -269,9 +249,7 @@ class TestSearchDirectoryPeople:
             )
         )
 
-        kwargs = (
-            svc.people.return_value.searchDirectoryPeople.call_args.kwargs
-        )
+        kwargs = svc.people.return_value.searchDirectoryPeople.call_args.kwargs
         assert kwargs["pageSize"] == 500
 
     def test_empty_result_message(self):

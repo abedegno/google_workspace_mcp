@@ -1311,9 +1311,7 @@ async def list_directory_people(
     if next_page_token:
         response += f"Next page token: {next_page_token}"
 
-    logger.info(
-        f"Listed {len(people)} directory people for {user_google_email}"
-    )
+    logger.info(f"Listed {len(people)} directory people for {user_google_email}")
     return response
 
 
@@ -1388,14 +1386,9 @@ async def search_directory_people(
     next_page_token = result.get("nextPageToken")
 
     if not people:
-        return (
-            f"No directory people found matching '{query}' for "
-            f"{user_google_email}."
-        )
+        return f"No directory people found matching '{query}' for {user_google_email}."
 
-    response = (
-        f"Directory search results for '{query}' ({len(people)} found):\n\n"
-    )
+    response = f"Directory search results for '{query}' ({len(people)} found):\n\n"
     for person in people:
         response += _format_contact(person) + "\n\n"
     if next_page_token:
